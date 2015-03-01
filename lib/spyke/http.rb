@@ -10,8 +10,10 @@ module Spyke
 
     module ClassMethods
       METHODS.each do |method|
-        define_method(method) do |path, params = {}|
-          new_instance_or_collection_from_result send("#{method}_raw", path, params)
+        define_method(method) do
+          uri = new.uri
+          params = current_scope.params.except(*uri.variables)
+          new_instance_or_collection_from_result send("#{method}_raw", uri, params)
         end
 
         define_method("#{method}_raw") do |path, params = {}|
@@ -80,12 +82,12 @@ module Spyke
     METHODS.each do |method|
       define_method(method) do |action = nil, params = {}|
         params = action if action.is_a?(Hash)
-        path = resolve_path_from_action(action)
+      path = resolve_path_from_action(action)
 
-        result = self.class.send("#{method}_raw", path, params)
+      result = self.class.send("#{method}_raw", path, params)
 
-        add_errors_to_model(result.errors)
-        self.attributes = result.data
+      add_errors_to_model(result.errors)
+      self.attributes = result.data
       end
     end
 
