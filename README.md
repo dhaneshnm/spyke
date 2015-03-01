@@ -131,7 +131,7 @@ Post.find(4) # => GET http://api.com/posts/4
 
 ### Custom requests
 
-You can create custom requests for non-CRUD actions using both
+You can perform custom requests for non-CRUD actions using both
 class methods and from inside Spyke::Base instances:
 
 ```ruby
