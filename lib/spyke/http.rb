@@ -15,12 +15,6 @@ module Spyke
         end
       end
 
-      def scoped_request(method)
-        uri = new.uri
-        params = current_scope.params.except(*uri.variables)
-        request(method, uri, params)
-      end
-
       def request(method, path, params = {})
         ActiveSupport::Notifications.instrument('request.spyke', method: method) do |payload|
           response = connection.send(method) do |request|
@@ -53,6 +47,12 @@ module Spyke
       end
 
       private
+
+        def scoped_request(method)
+          uri = new.uri
+          params = current_scope.params.except(*uri.variables)
+          request(method, uri, params)
+        end
 
         def new_instance_or_collection_from_result(result)
           if result.data.is_a?(Array)
