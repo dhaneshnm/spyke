@@ -125,6 +125,8 @@ user = User.find(3) # => GET http://api.com/people/3
 user.image # Will only use embedded JSON and never call out to api
 user.posts # => GET http://api.com/posts/for_user/3
 Post.find(4) # => GET http://api.com/posts/4
+Post.with_uri('posts/recent/(:id)').find(4) => GET http://api.com/posts/recent/4
+Post.with_uri(:recent) => GET http://api.com/posts/recent
 ```
 
 ### Log output
