@@ -108,7 +108,9 @@ User.create(name: 'Bob')
 
 ### Custom URIs
 
-You can specify custom URIs on both the class and association level:
+You can specify custom URIs on both the class and association level.
+Set uri to `nil` for associations you only want to use embedded JSON
+and never call out to the API.
 
 ```ruby
 class User < Spyke::Base
@@ -125,8 +127,23 @@ user = User.find(3) # => GET http://api.com/people/3
 user.image # Will only use embedded JSON and never call out to api
 user.posts # => GET http://api.com/posts/for_user/3
 Post.find(4) # => GET http://api.com/posts/4
-Post.with_uri('posts/recent/(:id)').find(4) => GET http://api.com/posts/recent/4
+```
+
+### Custom requests
+
+You can create custom requests for non-CRUD actions using both
+class methods and from inside Spyke::Base instances:
+
+```ruby
+# From class
+Post.with_uri('posts/recent') => GET http://api.com/posts/recent
+Post.with_uri('posts/recent').post => POST http://api.com/posts/recent
 Post.with_uri(:recent) => GET http://api.com/posts/recent
+Post.with_uri(:recent).where(published: true) => GET http://api.com/posts/recent?published=true
+
+# From instance
+post = Post.find(3)
+post.put(:publish) => PUT http://api.com/posts/3/publish
 ```
 
 ### Log output
