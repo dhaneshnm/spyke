@@ -10,8 +10,8 @@ module Spyke
     end
 
     def test_custom_put_request_from_class
-      endpoint = stub_request(:put, 'http://sushi.com/recipes/1/publish')
-      Recipe.with_uri('/recipes/1/publish').put
+      endpoint = stub_request(:put, 'http://sushi.com/recipes/publish_all')
+      Recipe.with_uri('/recipes/publish_all').put
       assert_requested endpoint
     end
 
