@@ -136,10 +136,10 @@ class methods and from inside Spyke::Base instances:
 
 ```ruby
 # From class
-Post.with_uri('posts/recent') => GET http://api.com/posts/recent
-Post.with_uri('posts/recent').post => POST http://api.com/posts/recent
-Post.with_uri(:recent) => GET http://api.com/posts/recent
-Post.with_uri(:recent).where(published: true) => GET http://api.com/posts/recent?published=true
+Post.using('posts/recent') => GET http://api.com/posts/recent
+Post.using('posts/recent').post => POST http://api.com/posts/recent
+Post.using(:recent) => GET http://api.com/posts/recent
+Post.using(:recent).where(published: true) => GET http://api.com/posts/recent?published=true
 
 # From instance
 post = Post.find(3)
