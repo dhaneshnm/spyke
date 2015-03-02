@@ -131,15 +131,15 @@ Post.find(4) # => GET http://api.com/posts/4
 
 ### Custom requests
 
-You can perform custom requests for non-CRUD actions using both
-class methods and from inside Spyke::Base instances:
+The `using` scope and `get`, `put`, `post` methods allows you to
+perform custom requests for non-CRUD actions:
 
 ```ruby
 # From class
 Post.using('posts/recent') => GET http://api.com/posts/recent
-Post.using('posts/recent').post => POST http://api.com/posts/recent
 Post.using(:recent) => GET http://api.com/posts/recent
 Post.using(:recent).where(published: true) => GET http://api.com/posts/recent?published=true
+Post.using('posts/recent').post => POST http://api.com/posts/recent
 
 # From instance
 post = Post.find(3)
