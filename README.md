@@ -75,7 +75,6 @@ Adding a class and inheriting from `Spyke::Base` will allow you to interact with
 ```ruby
 class User < Spyke::Base
   has_many :posts
-
   scope :active, -> { where(active: true) }
 end
 
@@ -129,32 +128,29 @@ Post.find(4) # => GET http://api.com/posts/4
 
 ### Custom requests
 
-The `using` scope and `get`, `put`, `post` methods allows you to
-perform custom requests for non-CRUD actions:
+Custom request methods and the `using` scope methods allow you to
+perform requests for non-REST actions:
+
+##### The `.using` scope
 
 ```ruby
-# From class
-Post.using('posts/recent') => GET http://api.com/posts/recent
-Post.using(:recent) => GET http://api.com/posts/recent
-Post.using(:recent).where(published: true) => GET http://api.com/posts/recent?published=true
-Post.using('posts/recent').post => POST http://api.com/posts/recent
-
-# From instance
-post = Post.find(3)
-post.put(:publish) => PUT http://api.com/posts/3/publish
+Post.using('posts/recent') # => GET http://api.com/posts/recent
+Post.using(:recent) # => GET http://api.com/posts/recent
+Post.using(:recent).where(status: 'draft') # => GET http://api.com/posts/recent?status=draft
+Post.using(:recent).post # => POST http://api.com/posts/recent
 ```
 
-### Log output
+##### Custom requests from instance
 
-When used with Rails, Spyke will automatically output helpful
-ActiveRecord-like messages to the main log:
+```ruby
+Post.find(3).put(:publish) # => PUT http://api.com/posts/3/publish
+```
 
-```bash
-Started GET "/posts" for 127.0.0.1 at 2014-12-01 14:31:20 +0000
-Processing by PostsController#index as HTML
-  Parameters: {}
-  Spyke (40.3ms)  GET http://api.com/posts [200]
-Completed 200 OK in 75ms (Views: 64.6ms | Spyke: 40.3ms | ActiveRecord: 0ms)
+##### Arbitrary requests (returns plain hashes)
+
+```ruby
+Post.request(:post, 'posts/3/log', time: '12:00')
+# => POST http://api.com/posts/3/log - { time: '12:00' }
 ```
 
 ### API-side validations
@@ -171,7 +167,20 @@ remap it in Faraday to match the above. Doing this will allow you to
 show errors returned from the server in forms and f.ex using
 `@post.errors.full_messages` just like ActiveRecord.
 
+### Log output
+
+When used with Rails, Spyke will automatically output helpful
+ActiveRecord-like messages to the main log:
+
+```bash
+Started GET "/posts" for 127.0.0.1 at 2014-12-01 14:31:20 +0000
+Processing by PostsController#index as HTML
+  Parameters: {}
+  Spyke (40.3ms)  GET http://api.com/posts [200]
+Completed 200 OK in 75ms (Views: 64.6ms | Spyke: 40.3ms | ActiveRecord: 0ms)
+```
+
 ## Contributing
 
 If possible please take a look at the [tests marked "wishlisted"](https://github.com/balvig/spyke/search?l=ruby&q=wishlisted&utf8=%E2%9C%93)!
-These are features/fixes we want to implement but haven't gotten around to doing yet :)
+These are features/fixes I'd like to implement but haven't gotten around to doing yet :)
